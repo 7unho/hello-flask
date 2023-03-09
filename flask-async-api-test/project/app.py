@@ -45,7 +45,7 @@ def adder():
     b = request.args.get('b', type=int)
     task = add_together.delay(a, b)
     task_cache[task.id] = task
-    return jsonify({'task_id': task.id})
+    return jsonify({'task_id':  task.id})
 
 @app.route('/progress', methods=['GET'])
 def progress():

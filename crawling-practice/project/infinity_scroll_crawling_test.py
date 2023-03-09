@@ -2,26 +2,35 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import time
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
-# 크롬 드라이버를 사용하겠습니다. 다른 브라우저를 사용하려면 드라이버를 다운로드 받아야 합니다.
-driver = webdriver.Chrome()
-
-# 크롤링할 페이지의 URL을 입력합니다.
-url = "https://techblogposts.com/"
-
-# 페이지를 로드합니다.
-driver.get(url)
+service = Service(ChromeDriverManager().install())
+service.start()
+options = webdriver.ChromeOptions()
+options.add_experimental_option("excludeSwitches", ["enable-logging"])
+options.add_experimental_option("detach", True)  # to keep browser open
+driver = webdriver.Remote(service.service_url, options=options)
+driver.get(url="https://techblogposts.com/")
 
 # 페이지 스크롤을 내리기 위해 body 엘리먼트를 찾습니다.
 body = driver.find_element(By.TAG_NAME, "body")
+# li_tags = driver.find_elements(By.CLASS_NAME, "css-qr8q5p")
+li_tags = driver.find_elements(By.CLASS_NAME, "css-zhzm1q")
 
 # 스크롤을 내리는 횟수입니다. 원하는 만큼 설정할 수 있습니다.
-scrolls = 10
+scrolls = 200000
 
 # 스크롤을 지정한 횟수만큼 내립니다.
 while scrolls > 0:
+    # li_tags = driver.find_elements(By.CLASS_NAME, "css-qr8q5p")
+    li_tags = driver.find_elements(By.CLASS_NAME, "css-zhzm1q")
+    
+    for li in li_tags:
+        print(li.text)
+        print(li.find_element(By.TAG_NAME, "a").get_attribute("href"))
     body.send_keys(Keys.PAGE_DOWN)
-    time.sleep(2) # 페이지 로드를 위해 2초간 기다립니다.
+    time.sleep(1) # 페이지 로드를 위해 2초간 기다립니다.
     scrolls -= 1
 
 # 스크롤을 내린 후에는 페이지에서 크롤링하고자 하는 정보를 수집합니다.
