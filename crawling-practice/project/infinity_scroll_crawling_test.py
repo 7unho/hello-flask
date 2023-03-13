@@ -19,13 +19,15 @@ body = driver.find_element(By.TAG_NAME, "body")
 li_tags = driver.find_elements(By.CLASS_NAME, "css-zhzm1q")
 
 # 스크롤을 내리는 횟수입니다. 원하는 만큼 설정할 수 있습니다.
-scrolls = 200000
+scrolls = 10
+contents = set()
 
 # 스크롤을 지정한 횟수만큼 내립니다.
 while scrolls > 0:
     # li_tags = driver.find_elements(By.CLASS_NAME, "css-qr8q5p")
     li_tags = driver.find_elements(By.CLASS_NAME, "css-zhzm1q")
-    
+    contents.add(li_tags)
+
     for li in li_tags:
         print(li.text)
         print(li.find_element(By.TAG_NAME, "a").get_attribute("href"))
@@ -38,3 +40,4 @@ while scrolls > 0:
 
 # 드라이버를 종료합니다.
 driver.quit()
+print(contents)
